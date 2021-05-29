@@ -23,14 +23,16 @@ app.use(morgan('dev'));
 
 // enable json message body for posting data to API
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json()); // To parse the incoming requests with JSON payloads
-
-// additional init stuff should go before routing
+app.use(express.json());
 
 // ROUTING
 // ---------------
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.send('hi');
+});
+
+app.get('/api', (_req, res) => {
+  res.send('Watson Lecture API');
 });
 
 app.use('/api/lectures', routes.lectureRouter);
