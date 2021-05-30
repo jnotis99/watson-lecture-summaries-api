@@ -35,7 +35,7 @@ app.get('/api', (_req, res) => {
   res.send('Watson Lecture API');
 });
 
-app.use('/api/lectures', routes.lectureRouter);
+app.use('/api/lectures', routes);
 
 // LAUNCH SERVER
 // ----------------
