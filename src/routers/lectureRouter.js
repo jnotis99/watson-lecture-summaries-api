@@ -1,7 +1,8 @@
-import { Router } from 'express';
 import * as Lectures from '../controllers/lectureController';
 
-const router = Router();
+const express = require('express');
+
+const router = express.Router();
 
 // /api/lectures route: create a new lecture (post), get all lectures (get)
 router.route('/')
@@ -31,4 +32,6 @@ router.route('/:id')
       res.status(500).json({ error: error.toString() });
     }
   });
-export default router;
+
+module.exports = router;
+// export default router;
