@@ -12,6 +12,7 @@ export const createLecture = (req, res) => {
   const analyzeParams = {
     text: lecture.text,
     features: {
+      concepts: {},
       semantic_roles: {},
     },
   };
