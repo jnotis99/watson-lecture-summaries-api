@@ -1,9 +1,8 @@
 import Lecture from '../models/lectureModel';
-// eslint-disable-next-line import/no-duplicates
 import naturalLanguageUnderstanding from '../nluutil/nlu';
-// eslint-disable-next-line import/no-duplicates
 
-export const createLecture = async (lectureInfo) => {
+export const createLecture = (req, res) => {
+  const lectureInfo = req.body;
   const lecture = new Lecture();
   lecture.title = lectureInfo.title;
   lecture.text = lectureInfo.text;
@@ -18,23 +17,22 @@ export const createLecture = async (lectureInfo) => {
   };
 
   // NLU call
-  lecture.nluOutput = await naturalLanguageUnderstanding.analyze(analyzeParams)
+  naturalLanguageUnderstanding.analyze(analyzeParams)
     .then((analysisResults) => {
       // Assign summarization results to the lecture result
-      console.log(JSON.stringify(analysisResults, null, 2));
-      return analysisResults.result;
+      // console.log(JSON.stringify(analysisResults, null, 2));
+      lecture.nluOutput = analysisResults.result;
+      lecture.save().then((result) => { res.json(result); });
     })
     .catch((err) => {
       console.log('error:', err);
-      throw new Error(err);
+      res.status(500).error(err);
     });
-
-  const newLecture = await lecture.save();
-  return newLecture;
 };
 
 export const getLectures = async () => {
-  const lectures = await Lecture.find({ sort: { created_at: -1 } });
+  // const lectures = await Lecture.find({ sort: { created_at: -1 } });
+  const lectures = await Lecture.find();
   return lectures;
 };
 
@@ -44,5 +42,6 @@ export const getLecture = async (id) => {
 };
 
 export const deleteLecture = async (id) => {
-  await Lecture.deleteOne({ _id: id });
+  const result = await Lecture.deleteOne({ _id: id });
+  return result;
 };

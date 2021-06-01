@@ -15,6 +15,11 @@ mongoose.connect(mongoURI).then(() => {
 // initialize
 const app = express();
 
+// const corsOptions = {
+//   origin: '*', // whitelisted origins
+//   optionsSuccessStatus: 200,
+// };
+
 // cors
 app.use(cors());
 
