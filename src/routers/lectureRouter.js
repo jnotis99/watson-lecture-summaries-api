@@ -1,10 +1,14 @@
+/**
+ * API enpoints that manage lectures
+ */
 import * as Lectures from '../controllers/lectureController';
 
 const express = require('express');
 
 const router = express.Router();
 
-// /api/lectures route: create a new lecture (post), get all lectures (get)
+// /api/lectures:
+// create a new lecture (post), get all lectures (get)
 router.route('/')
   .post(Lectures.createLecture)
   .get(async (_req, res) => {
@@ -16,6 +20,8 @@ router.route('/')
     }
   });
 
+// /api/lectures/:id
+// get a specific lecture (get), delete a specific lecture (delete)
 router.route('/:id')
   .get(async (req, res) => {
     try {
@@ -35,4 +41,3 @@ router.route('/:id')
   });
 
 module.exports = router;
-// export default router;
