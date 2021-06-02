@@ -1,3 +1,6 @@
+/**
+ * Schema for Lectures stored in MongoDB
+ */
 import mongoose, { Schema } from 'mongoose';
 
 const LectureSchema = new Schema({

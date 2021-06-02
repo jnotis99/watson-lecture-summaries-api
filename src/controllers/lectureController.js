@@ -1,29 +1,44 @@
+/**
+ * lectureController.js - handle all operations for the Lecture Schema
+ *
+ * Louis Murerwa and Joseph Notis, Spring 2021
+ */
 import Lecture from '../models/lectureModel';
-import naturalLanguageUnderstanding from '../nluutil/nlu';
+import watsonNLU from '../utils/nlu';
 
+// Whereas most files we handle req, res in the router, we handle it in the controller for this function
+// This helps us nest async calls for getting NLU output, then saving the data to MongoDB
 export const createLecture = (req, res) => {
   const lectureInfo = req.body;
   const lecture = new Lecture();
   lecture.title = lectureInfo.title;
   lecture.text = lectureInfo.text;
 
-  // GET NLU OUTPUT HERE
-  // NLU Params defining the objective of the NLU call - in this instance semantic_roles
+  // Get NLU output here
+  // NLU Params defining the objective of the NLU call
+  // in this instance semantic_roles, summarization (experimental), and concepts
   const analyzeParams = {
     text: lecture.text,
     features: {
+      summarization: {
+        limit: 4,
+      },
       concepts: {},
       semantic_roles: {},
     },
   };
 
   // NLU call
-  naturalLanguageUnderstanding.analyze(analyzeParams)
+  watsonNLU.naturalLanguageUnderstanding.analyze(analyzeParams)
     .then((analysisResults) => {
       // Assign summarization results to the lecture result
-      // console.log(JSON.stringify(analysisResults, null, 2));
       lecture.nluOutput = analysisResults.result;
-      lecture.save().then((result) => { res.json(result); });
+      // Save to Mongo DB
+      lecture.save().then((result) => {
+        res.json(result);
+      }).catch((error) => {
+        res.status(500).error(error);
+      });
     })
     .catch((err) => {
       console.log('error:', err);
@@ -32,7 +47,6 @@ export const createLecture = (req, res) => {
 };
 
 export const getLectures = async () => {
-  // const lectures = await Lecture.find({ sort: { created_at: -1 } });
   const lectures = await Lecture.find();
   return lectures;
 };

@@ -1,3 +1,8 @@
+/**
+ * server.js - Main file to initialize Node/Express/MongoDB API for LecAssist
+ *
+ * Joseph Notis, Spring 2021
+ */
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -14,11 +19,6 @@ mongoose.connect(mongoURI).then(() => {
 
 // initialize
 const app = express();
-
-// const corsOptions = {
-//   origin: '*', // whitelisted origins
-//   optionsSuccessStatus: 200,
-// };
 
 // cors
 app.use(cors());
